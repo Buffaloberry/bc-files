@@ -75,26 +75,58 @@ The following screenshot displays the result of running `docker ps` after succes
 ### Target Machines & Beats
 
 This ELK server is configured to monitor the following machines:
-- _TODO: List the IP addresses of the machines you are monitoring_
+- Web-1, IP: 10.0.0.5
+- Web-2, IP: 10.0.0.6
+- Web-3, IP: 10.0.0.7
 
 We have installed the following Beats on these machines:
-- _TODO: Specify which Beats you successfully installed_
+- Filebeat
+- Metricbeat
 
 These Beats allow us to collect the following information from each machine:
-- _TODO: In 1-2 sentences, explain what kind of data each beat collects, and provide 1 example of what you expect to see. E.g., `Winlogbeat` collects Windows logs, which we use to track user logon events, etc._
+- Filebeat: collects log data; used to centralise and monitor changes in typical, and specified, log locations
+- Metricbeat: periodically collects metrics from the operating system and services running; used to centralise and monitor system metrics e.g. CPU/memory usage
 
 ### Using the Playbook
 
 In order to use the playbook, you will need to have an Ansible control node already configured. Assuming you have such a control node provisioned: 
 
 SSH into the control node and follow the steps below:
-- Copy the _____ file to _____.
-- Update the _____ file to include...
-- Run the playbook, and navigate to ____ to check that the installation worked as expected.
 
-_TODO: Answer the following questions to fill in the blanks:_
-- _Which file is the playbook? Where do you copy it?_
-- _Which file do you update to make Ansible run the playbook on a specific machine? How do I specify which machine to install the ELK server on versus which to install Filebeat on?_
-- _Which URL do you navigate to in order to check that the ELK server is running?
+```bash
+# Clone this repo
+user@controlnode:~$ git clone https://github.com/Buffaloberry/bc-files.git
 
-_As a **Bonus**, provide the specific commands the user will need to run to download the playbook, update the files, etc._
+# Update files to configure your servers, and the installation of filebeat & metricbeat
+user@controlnode:~$ nano bc-files/ansible/{ansible.cfg,hosts,roles/files/*.yml}
+```
+
+- File updates to be made:
+  - `ansible/ansible.cfg`: change the value of `remote_user` to the username hosting your Ansible control node
+  ![ansible.cfg](images/file_update-1.png)
+  - `ansible/hosts`: replace the IPs under the `[webservers]` (servers to be monitored) and `[elk]` (ELK server) groups to the IP of the relevant machines
+  ![hosts](images/file_update-2.png)
+  - `ansible/roles/files/filebeat-config.yml`: replace the IP at lines 1105 and 1805 to the IP of your ELK server
+  ![filebeat-config.yml-1](images/file_update-3.png)
+  ![filebeat-config.yml-2](images/file_update-4.png)
+  - `ansible/roles/files/metricbeat-config.yml`: replace the IP at lines 62 and 95 to the IP of your ELK server
+  ![metricbeat-config.yml-1](images/file_update-5.png)
+  ![metricbeat-config.yml-2](images/file_update-6.png)
+
+```bash
+# Start your Ansible container
+user@controlnode:~$ sudo docker start [container name]
+
+# Copy the ansible directory to /etc in the container
+user@controlnode:~$ sudo docker cp bc-files/ansible/ [container name]:/etc/
+
+# Attach to your ansible container
+user@controlnode:~$ sudo docker attach [container name]
+
+# Run the playbooks webvm-playbook.yml & elkvm-playbook.yml to set up your web and ELK servers respectively
+root@containerID:~$ ansible-playbook /etc/ansible/roles/webvm-playbook.yml && ansible-playbook /etc/ansible/roles/elkvm-playbook.yml
+```
+
+- Navigate to `[public IP of ELK server]:5601/app/kibana` to check that the installation worked as expected.
+
+![Kibana home page](images/kibana_home.png)
