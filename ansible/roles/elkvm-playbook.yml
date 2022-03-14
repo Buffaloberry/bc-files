@@ -1,8 +1,13 @@
 ---
-  - name: Azure WebVM Playbook
-    hosts: webservers
+  - name: Elk VM Playbook
+    hosts: elk
     become: true
     tasks:
+
+    - name: More memory on VM
+      sysctl:
+        name: vm.max_map_count
+        value: 262144
 
     - name: Install docker.io
       apt:
@@ -19,16 +24,17 @@
       pip:
         name: docker
 
-    - name: Configure a DVWA container
+    - name: Configure a sebp/elk container
       docker_container:
-        name: dvwa_container
-        image: cyberxsecurity/dvwa
+        name: elk_container
+        image: sebp/elk:761
         state: started
         restart: yes
         restart_policy: always
         ports:
-          # Publish container port 80 as host port 80
-          - "80:80"
+          - "5601:5601"
+          - "9200:9200"
+          - "5044:5044"
         container_default_behavior: compatibility
 
     - name: Make sure docker service is started

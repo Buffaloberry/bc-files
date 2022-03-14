@@ -1,9 +1,12 @@
+# Does not have to be run
+# Already integrated into webvm-playbook.yml
 ---
   - name: Playbook to install & configure Metricbeat
     hosts: webservers
     become: true
     tasks:
 
+# The task "Download and install Metricbeat" replaces these
 #    - name: Download the Metricbeat installation file
 #      command:
 #        cmd: curl -L -O https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.6.2-amd64.deb
@@ -27,9 +30,6 @@
 
     - name: Metricbeat setup
       command: metricbeat setup
-
-#    - name: Log to stderr and disable syslog/file output
-#      command: metricbeat -e
 
     - name: Start Metricbeat
       command: service metricbeat start

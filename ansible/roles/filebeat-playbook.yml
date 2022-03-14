@@ -1,9 +1,12 @@
+# Does not have to be run
+# Already integrated into webvm-playbook.yml
 ---
   - name: Playbook to install & configure Filebeat
     hosts: webservers
     become: true
     tasks:
 
+# The task "Download and install Filebeat" replaces these
 #    - name: Download the Filebeat installation file
 #      command:
 #        cmd: curl -L -O https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.6.2-amd64.deb
@@ -27,9 +30,6 @@
 
     - name: Filebeat setup
       command: filebeat setup
-
-#    - name: Log to stderr and disable syslog/file output
-#      command: filebeat -e
 
     - name: Start Filebeat
       command: service filebeat start
