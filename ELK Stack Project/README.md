@@ -34,9 +34,9 @@ The configuration details of each machine may be found below.
 |---|---|---|---|
 | Jump-Box-Provisioner | Gateway | 10.0.0.4, 20.190.96.155 | Linux |
 | Elk-VM-1 | ELK Server | 10.1.0.4, 20.211.35.196 | Linux |
-| Web-1 | Webserver | 10.0.0.5 | Linux |
-| Web-2 | Webserver | 10.0.0.6 | Linux |
-| Web-3 | Webserver | 10.0.0.7 | Linux |
+| Web-1 | Web Server | 10.0.0.5 | Linux |
+| Web-2 | Web Server | 10.0.0.6 | Linux |
+| Web-3 | Web Server | 10.0.0.7 | Linux |
 
 ### Access Policies
 
